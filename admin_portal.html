@@ -1,0 +1,67 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Admin Panel</title>
+    <style>
+        body { font-family: Arial; background-color: #f9f9f9; padding: 30px; }
+        .container { background: #fff; padding: 20px; border-radius: 10px; max-width: 800px; margin: auto; }
+        input, button { padding: 10px; margin: 10px 0; width: 100%; }
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        th, td { border: 1px solid #ccc; padding: 8px; text-align: center; }
+    </style>
+</head>
+<body>
+    <div class="container" id="login">
+        <h2>Admin Login</h2>
+        <input type="text" id="username" placeholder="Username">
+        <input type="password" id="password" placeholder="Password">
+        <button onclick="login()">Login</button>
+    </div>
+    <div class="container hidden" id="panel">
+        <h2>Student Results</h2>
+        <table>
+            <thead>
+                <tr><th>Name</th><th>Roll</th><th>Phone</th><th>Score</th><th>Date</th></tr>
+            </thead>
+            <tbody id="resultBody"></tbody>
+        </table>
+        <button onclick="downloadCSV()">Download CSV</button>
+    </div>
+    <script>
+        function login() {
+            const user = document.getElementById("username").value;
+            const pass = document.getElementById("password").value;
+            if (user === "admin" && pass === "12345") {
+                document.getElementById("login").classList.add("hidden");
+                document.getElementById("panel").classList.remove("hidden");
+                showResults();
+            } else alert("Invalid Credentials");
+        }
+
+        function showResults() {
+            const data = JSON.parse(localStorage.getItem("studentData")) || [];
+            const body = document.getElementById("resultBody");
+            body.innerHTML = "";
+            data.forEach(e => {
+                const row = `<tr><td>${e.name}</td><td>${e.roll}</td><td>${e.phone}</td><td>${e.score}</td><td>${e.date}</td></tr>`;
+                body.innerHTML += row;
+            });
+        }
+
+        function downloadCSV() {
+            const data = JSON.parse(localStorage.getItem("studentData")) || [];
+            let csv = "Name,Roll,Phone,Score,Date\n";
+            data.forEach(e => {
+                csv += `${e.name},${e.roll},${e.phone},${e.score},${e.date}\n`;
+            });
+            const blob = new Blob([csv], { type: "text/csv" });
+            const a = document.createElement("a");
+            a.href = URL.createObjectURL(blob);
+            a.download = "results.csv";
+            a.click();
+        }
+    </script>
+</body>
+</html>
