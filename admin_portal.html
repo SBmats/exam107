@@ -28,6 +28,7 @@
             <tbody id="resultBody"></tbody>
         </table>
         <button onclick="downloadCSV()">Download CSV</button>
+<button onclick="clearResults()">Clear All Results</button>
     </div>
     <script>
         function login() {
@@ -62,6 +63,15 @@
             a.download = "results.csv";
             a.click();
         }
-    </script>
+    
+        function clearResults() {
+            if (confirm("Are you sure you want to delete all results?")) {
+                localStorage.removeItem("studentData");
+                alert("All results have been cleared.");
+                showResults(); // Refresh the table
+            }
+        }
+        
+</script>
 </body>
 </html>
